@@ -1,41 +1,38 @@
+# Model weights (too large for GitHub, stored on HuggingFace Hub)
+models/checkpoints/toxic_model.pt
+*.pt
+*.bin
+
+# Data files (too large)
+data/raw/
+data/processed/
+
 # Python
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
 *.pyd
-
-# Virtual Environment
+.Python
+env/
 venv/
 .env
-.venv/
+*.egg-info/
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
-
-# Logs
-*.log
-
-# Python build files
-build/
-dist/
-*.egg-info/
 
 # IDE
 .vscode/
 .idea/
 
-# Large ML artifacts
-models/checkpoints/
-*.pt
-*.pth
-*.ckpt
+# Logs
+*.log
+logs/
 
-# Dataset files (optional)
-data/raw/*
-data/processed/*
-!data/raw/.gitkeep
-!data/processed/.gitkeep
+# Keep these (small, needed)
+# models/checkpoints/thresholds.json  ← commit this
