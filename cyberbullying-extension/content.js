@@ -1,40 +1,86 @@
+console.log("🔥 Extension Loaded");
+
+const API_URL = "http://127.0.0.1:8000/predict";
+
+// ===============================
+// API CALL
+// ===============================
 async function analyzeComment(text) {
-    try {
-        const response = await fetch("http://127.0.0.1:8000/predict", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ text: text })
-        });
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
 
-        return await response.json();
-    } catch (error) {
-        console.error("API Error:", error);
-        return null;
-    }
+    return await response.json();
+  } catch (error) {
+    console.error("API Error:", error);
+    return null;
+  }
 }
 
+// ===============================
+// BLUR FUNCTION (CLEAN)
+// ===============================
+function blurComment(el) {
+  el.style.filter = "blur(5px)";
+  el.style.transition = "0.3s";
+}
 
-// Example: scan all paragraphs (you can customize later)
+// ===============================
+// MAIN SCAN FUNCTION
+// ===============================
 async function scanPage() {
-    // Only target comment blocks
-    const comments = document.querySelectorAll(".comment");
+  console.log("Scanning page...");
 
-    for (let el of comments) {
-        const text = el.innerText;
+  const elements = document.querySelectorAll(".text");
 
-        if (!text || text.length < 5) continue;
+  for (let el of elements) {
+    if (el.dataset.checked) continue;
 
-        const result = await analyzeComment(text);
+    const text = el.innerText.trim();
 
-        if (result && result.is_toxic) {
-            el.style.backgroundColor = "#ffdddd";
-            el.style.color = "#900";
-            el.innerText = "🚫 Hidden toxic content";
-        }
+    if (!text || text.length < 5) continue;
+
+    el.dataset.checked = "true";
+
+    console.log("Checking:", text);
+
+    const result = await analyzeComment(text);
+
+    console.log("Result:", result);
+
+    if (!result) continue;
+
+    // ✅ KEY FIX
+    if (result.is_toxic === true) {
+      blurComment(el);
+
+      // update count
+      chrome.storage.local.get(["hiddenCount"], (data) => {
+        let count = data.hiddenCount || 0;
+        chrome.storage.local.set({ hiddenCount: count + 1 });
+      });
     }
+  }
 }
 
-// Run after page loads
-setTimeout(scanPage, 3000);
+// ===============================
+// AUTO RUN
+// ===============================
+window.addEventListener("load", () => {
+  setTimeout(scanPage, 2000);
+});
+
+// ===============================
+// DYNAMIC CONTENT (IMPORTANT)
+// ===============================
+const observer = new MutationObserver(() => {
+  scanPage();
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true
+});

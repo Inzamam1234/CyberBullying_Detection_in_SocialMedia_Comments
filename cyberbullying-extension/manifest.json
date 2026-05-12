@@ -1,30 +1,20 @@
 {
     "manifest_version": 3,
-    "name": "Cyberbullying Filter",
-    "version": "2.0",
-    "description": "Detects and blurs toxic comments on social media using AI",
+    "name": "CyberShield - Toxic Comment Filter",
+    "version": "1.0",
+    "description": "Blurs toxic comments using AI",
     "permissions": [
         "activeTab",
         "scripting",
         "storage"
     ],
     "host_permissions": [
-        "http://127.0.0.1:8000/*",
-        "https://your-api-domain.com/*",
-        "https://*.youtube.com/*",
-        "https://*.twitter.com/*",
-        "https://*.x.com/*",
-        "https://*.reddit.com/*",
-        "https://*.instagram.com/*"
+        "http://127.0.0.1:8000/*"
     ],
     "content_scripts": [
         {
             "matches": [
-                "https://*.youtube.com/*",
-                "https://*.twitter.com/*",
-                "https://*.x.com/*",
-                "https://*.reddit.com/*",
-                "https://*.instagram.com/*"
+                "<all_urls>"
             ],
             "js": [
                 "content.js"
@@ -33,16 +23,6 @@
         }
     ],
     "action": {
-        "default_popup": "popup.html",
-        "default_icon": {
-            "16": "icons/icon16.png",
-            "48": "icons/icon48.png",
-            "128": "icons/icon128.png"
-        }
-    },
-    "icons": {
-        "16": "icons/icon16.png",
-        "48": "icons/icon48.png",
-        "128": "icons/icon128.png"
+        "default_popup": "popup.html"
     }
 }
